@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bibliotheca — Biblioteca Virtual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="paper-texture"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 8C6 6.5 7 6 8.5 6H19V32H8.5C7 32 6 32.5 6 34V8Z" fill="currentColor" opacity="0.85"/>
+      <path d="M34 8C34 6.5 33 6 31.5 6H21V32H31.5C33 32 34 32.5 34 34V8Z" fill="currentColor"/>
+    </svg>
+    <div class="brand-text">
+      <span class="brand-name">Bibliotheca</span>
+      <span class="brand-sub">catálogo &amp; préstamos</span>
+    </div>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-view="catalogo">Catálogo</button>
+    <button class="tab" data-view="prestamos">Préstamos</button>
+    <button class="tab" data-view="usuarios">Lectores</button>
+    <button class="tab" data-view="panel">Panel</button>
+  </nav>
+</header>
+
+<main class="app-shell">
+
+  <!-- ============ VISTA: CATÁLOGO ============ -->
+  <section class="view active" id="view-catalogo">
+    <div class="view-head">
+      <div>
+        <p class="eyebrow">Fondo bibliográfico</p>
+        <h1>El catálogo</h1>
+      </div>
+      <button class="btn btn-primary" id="btn-nuevo-libro">+ Añadir libro</button>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-field">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.4"/><path d="M11 11L14.5 14.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <input type="text" id="input-buscar" placeholder="Buscar por título, autor o ISBN…">
+      </div>
+      <select id="select-categoria">
+        <option value="">Todas las categorías</option>
+      </select>
+      <label class="check-field">
+        <input type="checkbox" id="check-disponibles">
+        <span>Solo disponibles</span>
+      </label>
+    </div>
+
+    <div class="shelf" id="shelf-libros"></div>
+    <p class="empty-state" id="catalogo-vacio" hidden>No se encontró ningún libro con esos criterios. Prueba otra búsqueda o añade uno nuevo.</p>
+  </section>
+
+  <!-- ============ VISTA: PRÉSTAMOS ============ -->
+  <section class="view" id="view-prestamos">
+    <div class="view-head">
+      <div>
+        <p class="eyebrow">Movimiento de sala</p>
+        <h1>Préstamos</h1>
+      </div>
+      <button class="btn btn-primary" id="btn-nuevo-prestamo">+ Registrar préstamo</button>
+    </div>
+
+    <div class="toolbar">
+      <div class="filter-pills" id="filtro-estado">
+        <button class="pill active" data-estado="">Todos</button>
+        <button class="pill" data-estado="activo">Activos</button>
+        <button class="pill" data-estado="devuelto">Devueltos</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="ledger" id="tabla-prestamos">
+        <thead>
+          <tr>
+            <th>Libro</th>
+            <th>Lector</th>
+            <th>Prestado</th>
+            <th>Vence</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="empty-state" id="prestamos-vacio" hidden>Aún no hay préstamos registrados con este filtro.</p>
+  </section>
+
+  <!-- ============ VISTA: USUARIOS ============ -->
+  <section class="view" id="view-usuarios">
+    <div class="view-head">
+      <div>
+        <p class="eyebrow">Comunidad de lectura</p>
+        <h1>Lectores</h1>
+      </div>
+      <button class="btn btn-primary" id="btn-nuevo-usuario">+ Registrar lector</button>
+    </div>
+
+    <div class="reader-grid" id="grid-usuarios"></div>
+    <p class="empty-state" id="usuarios-vacio" hidden>Todavía no hay lectores registrados.</p>
+  </section>
+
+  <!-- ============ VISTA: PANEL ============ -->
+  <section class="view" id="view-panel">
+    <div class="view-head">
+      <div>
+        <p class="eyebrow">De un vistazo</p>
+        <h1>Panel general</h1>
+      </div>
+    </div>
+
+    <div class="stat-grid" id="stat-grid"></div>
+  </section>
+
+</main>
+
+<!-- ============ MODAL GENÉRICO ============ -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modal-close" aria-label="Cerrar">×</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

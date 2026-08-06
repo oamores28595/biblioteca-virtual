@@ -1,0 +1,20 @@
+{
+  "name": "biblioteca-virtual-backend",
+  "version": "1.0.0",
+  "description": "API REST para el proyecto integrador Biblioteca Virtual (Node.js + Express + SQLite)",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node database/seed.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
