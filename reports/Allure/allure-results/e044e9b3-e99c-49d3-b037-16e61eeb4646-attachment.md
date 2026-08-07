@@ -1,0 +1,170 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: prestamos.spec.js >> Registrar préstamo
+- Location: tests\e2e\prestamos.spec.js:7:1
+
+# Error details
+
+```
+Test timeout of 30000ms exceeded.
+```
+
+```
+Error: locator.selectOption: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('#p-libro')
+    - locator resolved to <select required="" id="p-libro">…</select>
+  - attempting select option action
+    2 × waiting for element to be visible and enabled
+      - did not find some options
+    - retrying select option action
+    - waiting 20ms
+    2 × waiting for element to be visible and enabled
+      - did not find some options
+    - retrying select option action
+      - waiting 100ms
+    57 × waiting for element to be visible and enabled
+       - did not find some options
+     - retrying select option action
+       - waiting 500ms
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e7]:
+      - generic [ref=e8]: Bibliotheca
+      - generic [ref=e9]: catálogo & préstamos
+    - navigation [ref=e10]:
+      - button "Catálogo" [ref=e11] [cursor=pointer]
+      - button "Préstamos" [ref=e12] [cursor=pointer]
+      - button "Lectores" [ref=e13] [cursor=pointer]
+      - button "Panel" [ref=e14] [cursor=pointer]
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - paragraph [ref=e19]: Movimiento de sala
+          - heading "Préstamos" [level=1] [ref=e20]
+        - button "+ Registrar préstamo" [active] [ref=e21] [cursor=pointer]
+      - generic [ref=e23]:
+        - button "Todos" [ref=e24] [cursor=pointer]
+        - button "Activos" [ref=e25] [cursor=pointer]
+        - button "Devueltos" [ref=e26] [cursor=pointer]
+      - table [ref=e28]:
+        - rowgroup [ref=e29]:
+          - row [ref=e30]:
+            - columnheader "Libro" [ref=e31]
+            - columnheader "Lector" [ref=e32]
+            - columnheader "Prestado" [ref=e33]
+            - columnheader "Vence" [ref=e34]
+            - columnheader "Estado" [ref=e35]
+            - columnheader [ref=e36]
+        - rowgroup [ref=e37]:
+          - row [ref=e38]:
+            - cell [ref=e39]:
+              - strong [ref=e40]: Rayuela
+            - cell "Ana Torres" [ref=e41]
+            - cell "06 ago 2026" [ref=e42]
+            - cell "19 ago 2026" [ref=e43]
+            - cell "Devuelto" [ref=e44]
+            - cell [ref=e45]
+  - generic [ref=e47]:
+    - button "Cerrar" [ref=e48] [cursor=pointer]: ×
+    - generic [ref=e49]:
+      - heading "Registrar préstamo" [level=2] [ref=e50]
+      - paragraph [ref=e51]: Vence a los 14 días
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]: Libro
+          - combobox "Libro" [ref=e55]:
+            - option "Selecciona un libro…" [selected]
+            - option "Cosmos — 2 disp."
+            - option "El principito — 6 disp."
+            - option "Fahrenheit 451 — 3 disp."
+            - option "Playwright Testing 2 — 1 disp."
+            - option "Playwright Testing Actualizado — 4 disp."
+            - option "Pruebas QA — 1 disp."
+            - option "Rayuela — 2 disp."
+            - 'option "Sapiens: De animales a dioses — 5 disp."'
+            - option "Veinte poemas de amor — 3 disp."
+        - generic [ref=e56]:
+          - generic [ref=e57]: Lector
+          - combobox "Lector" [ref=e58]:
+            - option "Selecciona un lector…" [selected]
+            - option "Ana Torres"
+            - option "Juan Pérez"
+            - option "Luis Fernández"
+            - option "María Jiménez"
+        - generic [ref=e59]:
+          - button "Cancelar" [ref=e60] [cursor=pointer]
+          - button "Confirmar préstamo" [ref=e61] [cursor=pointer]
+```
+
+# Test source
+
+```ts
+  1  | const { expect } = require('@playwright/test');
+  2  | 
+  3  | class PrestamosPage {
+  4  | 
+  5  |     constructor(page) {
+  6  | 
+  7  |         this.page = page;
+  8  | 
+  9  |         this.btnNuevoPrestamo = page.locator('#btn-nuevo-prestamo');
+  10 | 
+  11 |         this.cmbLibro = page.locator('#p-libro');
+  12 | 
+  13 |         this.cmbUsuario = page.locator('#p-usuario');
+  14 | 
+  15 |         this.btnGuardar = page.locator('button[type="submit"]');
+  16 | 
+  17 |         this.tabla = page.locator('#tabla-prestamos');
+  18 | 
+  19 |     }
+  20 | 
+  21 |     async abrirFormulario() {
+  22 | 
+  23 |         await this.btnNuevoPrestamo.click();
+  24 | 
+  25 |     }
+  26 | 
+  27 |     async crearPrestamo(libro, usuario) {
+  28 | 
+  29 |         await this.abrirFormulario();
+  30 | 
+> 31 |         await this.cmbLibro.selectOption({ label: libro });
+     |                             ^ Error: locator.selectOption: Test timeout of 30000ms exceeded.
+  32 | 
+  33 |         await this.cmbUsuario.selectOption({ label: usuario });
+  34 | 
+  35 |         await this.btnGuardar.click();
+  36 | 
+  37 |     }
+  38 | 
+  39 |     async verificarPrestamo(libro) {
+  40 | 
+  41 |         await expect(this.tabla).toContainText(libro);
+  42 | 
+  43 |     }
+  44 | 
+  45 |     async devolverPrimerPrestamo() {
+  46 | 
+  47 |         await this.page.locator('button[data-accion="devolver"]').first().click();
+  48 | 
+  49 |     }
+  50 | 
+  51 | }
+  52 | 
+  53 | module.exports = PrestamosPage;
+```
